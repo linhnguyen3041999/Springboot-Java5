@@ -20,6 +20,7 @@ import com.PS11390_NguyenTungNhatLinh_ASM.exception.MyFileNotFoundException;
 
 @Service
 public class FileStorageService {
+	
 	  private final Path fileStorageLocation;
 
 	    @Autowired
@@ -58,7 +59,7 @@ public class FileStorageService {
 	        try {
 	            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
 	            Resource resource = new UrlResource(filePath.toUri());
-	            if(resource.exists()) {
+	            if(resource.exists() || resource.isReadable()) {
 	                return resource;
 	            } else {
 	                throw new MyFileNotFoundException("File not found " + fileName);

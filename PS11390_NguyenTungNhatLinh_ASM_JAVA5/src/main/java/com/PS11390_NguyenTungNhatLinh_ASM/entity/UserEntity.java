@@ -3,15 +3,13 @@ package com.PS11390_NguyenTungNhatLinh_ASM.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,32 +21,37 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="user")
-public class UserEntity extends BaseEntity{
-	
-	@Column(name="username")
+@Table(name = "user")
+public class UserEntity extends BaseEntity {
+
+	@NotNull
+	@Column(name = "username")
 	private String username;
 	
-	@Column(name="hashpassword")
+	@NotNull
+	@Column(name = "hashpassword")
 	private String hashPassword;
 	
-	@Column(name="fullname")
+	@NotNull
+	@Column(name = "fullname")
 	private String fullname;
-	
-	@Column(name="email")
+
+	@Column(name = "email")
 	private String email;
-	
-	@Column(name="imgurl")
+
+	@Column(name = "imgurl")
 	private String imgUrl;
 	
-	@Column(name="isdeleted")
+	@NotNull
+	@Column(name = "isdeleted")
 	private Boolean isDeleted;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinTable(name = "user_role", joinColumns =  @JoinColumn(name = "userid"), inverseJoinColumns = @JoinColumn(name="roleid"))
-	private List<RoleEntity> roles = new ArrayList<>();
-	
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name = "roleid")
+	private RoleEntity roleId;
+
 	@OneToMany(mappedBy = "userId")
 	private List<OrderEntity> orders = new ArrayList<>();
-	
+
 }

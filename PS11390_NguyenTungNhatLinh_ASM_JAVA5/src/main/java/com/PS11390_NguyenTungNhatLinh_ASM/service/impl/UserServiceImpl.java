@@ -1,13 +1,16 @@
 package com.PS11390_NguyenTungNhatLinh_ASM.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.PS11390_NguyenTungNhatLinh_ASM.converter.UserConverter;
 import com.PS11390_NguyenTungNhatLinh_ASM.dto.UserDTO;
 import com.PS11390_NguyenTungNhatLinh_ASM.entity.UserEntity;
 import com.PS11390_NguyenTungNhatLinh_ASM.repository.UserRepository;
@@ -19,20 +22,16 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	UserConverter userConverter;
+	
 	private BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
 	@Override
 	public UserDTO save(UserDTO dto) {
-		UserEntity userEntity = new UserEntity();
-//		if(dto.getId() != null) {
-//			//Optional<UserEntity> entity = userRepository.findById(dto.getId());
-//			//BeanUtils.copyProperties(dto, entity.get());
-//			BeanUtils.copyProperties(dto, userEntity);
-//		}else {
-//			
-//		}
-		BeanUtils.copyProperties(dto, userEntity);
+		UserEntity userEntity = userConverter.toEntity(dto);
 		userEntity.setHashPassword(bcrypt.encode(dto.getHashPassword()));
+		userEntity.setIsDeleted(false);
 		userEntity = userRepository.save(userEntity);
 		return dto;
 	}
@@ -40,9 +39,8 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDTO findById(Long id) {
 		Optional<UserEntity> entity = userRepository.findById(id);
-		UserDTO dto = new UserDTO();
 		if(entity.isPresent()) {
-			BeanUtils.copyProperties(entity.get(), dto);
+			UserDTO dto = userConverter.toDTO(entity.get());
 			return dto;
 		}
 		return null;
@@ -67,12 +65,66 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDTO findByUsername(String username) {
 		UserEntity entity = userRepository.findByUsername(username);
-		UserDTO dto = new UserDTO();
 		if(entity != null) {
-			BeanUtils.copyProperties(entity, dto);
+			UserDTO dto = userConverter.toDTO(entity);
+			return dto;
 		}
 		return null;
 	}
 	
+	
+	@Override
+	public int totalItem() {
+		return (int)  userRepository.count();
+	}
+
+	@Override
+	public List<UserDTO> findByIsDeletedFalse(Pageable pageable) {
+		List<UserEntity> entities = userRepository.findByIsDeleted(Boolean.FALSE,pageable);
+		List<UserDTO> dtos = new ArrayList<>();
+		for (UserEntity item : entities) {
+			UserDTO dto = userConverter.toDTO(item);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	@Override
+	public List<UserDTO> findByIsDeletedFalseAndFullnameLike(String keyword, Pageable pageable) {
+		List<UserEntity> entities = userRepository.findByIsDeletedAndFullnameLike(Boolean.FALSE,"%"+keyword+"%", pageable);
+		List<UserDTO> dtos = new ArrayList<>();
+		for (UserEntity item : entities) {
+			UserDTO dto = userConverter.toDTO(item);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	@Override
+	public List<UserDTO> findByIsDeletedTrue(Pageable pageable) {
+		List<UserEntity> entities = userRepository.findByIsDeleted(Boolean.TRUE,pageable);
+		List<UserDTO> dtos = new ArrayList<>();
+		for (UserEntity item : entities) {
+			UserDTO dto = userConverter.toDTO(item);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	@Override
+	public List<UserDTO> findByIsDeletedTrueAndFullnameLike(String keyword, Pageable pageable) {
+		List<UserEntity> entities = userRepository.findByIsDeletedAndFullnameLike(Boolean.TRUE,"%"+keyword+"%", pageable);
+		List<UserDTO> dtos = new ArrayList<>();
+		for (UserEntity item : entities) {
+			UserDTO dto = userConverter.toDTO(item);
+			dtos.add(dto);
+		}
+		return dtos;
+	}
+
+	@Override
+	public void isDeleted(Boolean isDeleted, Long id) {
+		userRepository.isDeleted(isDeleted, id);
+	}
 	
 }

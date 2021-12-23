@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.PS11390_NguyenTungNhatLinh_ASM.entity.RoleEntity;
 @Repository
 public interface RoleRepository extends JpaRepository<RoleEntity, Long>{
-
+	RoleEntity findByCode(String code);
 }

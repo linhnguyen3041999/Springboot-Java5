@@ -16,15 +16,21 @@
   <link rel="stylesheet" href="/assetsAd/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-   <script src="<c:url value='/assetsAd/sweetalert/sweetalert2.min.js' />"></script>
-    <link rel="stylesheet" href="<c:url value='/assetsAd/sweetalert/sweetalert2.min.css' />" class="ace-main-stylesheet" id="main-ace-style" />
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.all.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+      
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      
+   <%--  <script src="<c:url value='/assetsAd/sweetalert/sweetalert2.min.js' />"></script>
+    <link rel="stylesheet" href="<c:url value='/assetsAd/sweetalert/sweetalert2.min.css' />" class="ace-main-stylesheet" id="main-ace-style" /> --%>
 </head>
 <body class="hold-transition sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
   
-  	<tiles:insertAttribute name="header" />
+  	<%-- <tiles:insertAttribute name="header" /> --%>
 
 	<tiles:insertAttribute name="menu" />
 
@@ -64,6 +70,8 @@
 
 <!-- jQuery -->
 <script src="/assetsAd/plugins/jquery/jquery.min.js"></script>
+<!-- pagination -->
+<script src="/assetsAd/dist/paging/jquery.twbsPagination.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/assetsAd/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->

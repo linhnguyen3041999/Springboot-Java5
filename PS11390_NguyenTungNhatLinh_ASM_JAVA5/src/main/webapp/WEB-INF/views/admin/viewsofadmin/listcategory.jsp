@@ -2,26 +2,27 @@
     pageEncoding="UTF-8"%>
  <%@include file="/WEB-INF/views/admin/common/taglib.jsp" %>
  <c:url var="categoryAPI" value="/api/category" />
- <c:url var="categoryURL" value="/category/list" />
+ <c:url var="categoryURL" value="/admin/category/list" />
 <!-- Main content -->
     <section class="content">
 
       <!-- Default box -->
+     
       <div class="card">
         <div class="card-header">
          <div class="card-title">
-                <div class="input-group input-group-sm">
-                  <input type="text" class="form-control" placeholder="Search">
-                  <div class="input-group-append">
-                    <div class="btn btn-primary">
-                    	<a href="/search"><i class="fas fa-search"></i></a>
-                    </div>
-                  </div>
-                </div>
+                <form action="/admin/category/search" method="post">
+         				<div class="input-group input-group-sm">
+		                  <input type="text" name="keyword" class="form-control" placeholder="Search">
+		                  <div class="input-group-append">
+		                    	<button type="submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+		                  </div>
+		                </div>
+         		</form>
               </div>
 			
           <div class="card-tools">
-          	<c:url var="addCategoryUrl" value="/category/edit"/>
+          	<c:url var="addCategoryUrl" value="/admin/category/edit"/>
             <a class="btn btn-warning btn-sm" href="${addCategoryUrl}">
                   <i class="fas fa-plus"></i>
                               Add
@@ -49,7 +50,6 @@
               <tbody>
               <c:forEach var="item" items="${list}">
               		<tr>
-              		<input type="hidden" value="${item.id}" id="categoryId" />
                       <td>
                           ${item.id}
                       </td>
@@ -60,12 +60,7 @@
 							${item.code}
                       </td>
                       <td class="project-actions text-right">
-                          <a class="btn btn-primary btn-sm" href="#">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
-                          </a>
-                          <c:url var="updateCategoryURL" value="/category/edit">
+                          <c:url var="updateCategoryURL" value="/admin/category/edit">
 								<c:param name="id" value="${item.id}"/>
 							</c:url>
                           <a class="btn btn-info btn-sm" href="${updateCategoryURL}">
@@ -73,7 +68,7 @@
                               </i>
                               Edit
                           </a>
-                          <a class="btn btn-danger btn-sm" onclick="warningBeforeDelete()">
+                          <a class="btn btn-danger btn-sm" value="hello" href="/admin/category/delete/${item.id}">
                               <i class="fas fa-trash">
                               </i>
                               Delete
@@ -88,42 +83,104 @@
         <!-- /.card-body -->
       </div>
       <!-- /.card -->
-
+       <form action="/admin/category/list" id="formSubmit">
+       			<div class="row" style="justify-content: center;">
+						<ul class="pagination" id="pagination"></ul>
+							<input type="hidden" value="" id="page" name="page"/>
+							<input type="hidden" value="" id="limit" name="limit"/>
+				</div>
+       	</form>
+	
     </section>
     <!-- /.content -->
  <script type="text/javascript">
- function warningBeforeDelete(){
-		swal({
-			  title: "Are you sure?",
-			  text: "You will not be able to recover this imaginary file!",
-			  type: "warning",
-			  showCancelButton: true,
-			  confirmButtonClass: "btn-danger",
-			  confirmButtonText: "Yes, delete it!",
-			  cancelButtonText: "No, cancel plx!",
-			  closeOnConfirm: false,
-			  closeOnCancel: false
-			}).then(function(isConfirm) {
-			  if (isConfirm) {
-					var id = $('#categoryId').val();
-					deleteNew(id);
-			  } else {
-			    swal("Cancelled", "Your imaginary file is safe :)", "error");
-			  }
-			});
-	}
- function deleteNew(data) {
-     $.ajax({
-         url: '${categoryAPI}',
-         type: 'DELETE',
-         contentType: 'application/json',
-         data: JSON.stringify(data),
-         success: function (result) {
-             window.location.href = "${categoryURL}?message=delete_success";
-         },
-         error: function (error) {
-         	window.location.href = "${categoryURL}?message=error_system";
-         }
-     });
+ var url = window.location.search;
+ if( url == "?message=insert_success"){
+ 	const Toast = Swal.mixin({
+ 		  toast: true,
+ 		  position: 'top-end',
+ 		  showConfirmButton: false,
+ 		  timer: 3000,
+ 		  timerProgressBar: true,
+ 		  didOpen: (toast) => {
+ 		    toast.addEventListener('mouseenter', Swal.stopTimer)
+ 		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+ 		  }
+ 		})
+
+ 		Toast.fire({
+ 		  icon: 'success',
+ 		  title: 'Thêm Mới Thành Công!'
+ 		})
+ }else if( url == "?message=update_success"){
+	 const Toast = Swal.mixin({
+		  toast: true,
+		  position: 'top-end',
+		  showConfirmButton: false,
+		  timer: 3000,
+		  timerProgressBar: true,
+		  didOpen: (toast) => {
+		    toast.addEventListener('mouseenter', Swal.stopTimer)
+		    toast.addEventListener('mouseleave', Swal.resumeTimer)
+		  }
+		})
+
+		Toast.fire({
+		  icon: 'success',
+		  title: 'Cập Nhật Thành Công!'
+		})
  }
+ var totalPages = ${totalPage};
+	var currentPage = ${currentPage};
+		$(function() {
+			window.pagObj = $('#pagination').twbsPagination({
+				totalPages: totalPages,
+				visiblePages: 10,
+				startPage: currentPage,
+				onPageClick : function(event, page) {
+					if (currentPage != page) {
+						$('#limit').val(5);
+						$('#page').val(page);
+						$('#formSubmit').submit();
+					}
+				}
+			});
+		});
+ 
+  function warningBeforeDelete(id){
+	  const swalWithBootstrapButtons = Swal.mixin({
+		  customClass: {
+		    confirmButton: 'btn btn-danger m-2',
+		    cancelButton: 'btn btn-success m-1'
+		  },
+		  buttonsStyling: false 
+		})
+		swalWithBootstrapButtons.fire({
+		  title: 'Are you sure?',
+		  text: "",
+		  icon: 'warning',
+		  showCancelButton: true,
+		  confirmButtonText: 'Yes, delete it!',
+		  cancelButtonText: 'No, cancel!',
+		  reverseButtons: true
+		}).then((result) => {
+		  if (result.isConfirmed) {
+				deleteNew(id);
+		    swalWithBootstrapButtons.fire(
+		      'Deleted!',
+		      'Your file has been deleted.',
+		      'success'
+		    )
+		  } else if (
+		    /* Read more about handling dismissals below */
+		    result.dismiss === Swal.DismissReason.cancel
+		  ) {
+		    swalWithBootstrapButtons.fire(
+		      'Cancelled',
+		      'Your file is safe :)',
+		      'error'
+		    )
+		  }
+		})
+	}
 </script>

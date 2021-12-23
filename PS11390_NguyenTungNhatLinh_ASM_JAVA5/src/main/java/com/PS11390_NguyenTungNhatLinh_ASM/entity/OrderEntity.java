@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,18 +24,23 @@ import lombok.Setter;
 @Table(name="orders")
 public class OrderEntity extends BaseEntity{
 	
+	@NotNull
 	@Column(name="totalprice")
 	private Double totalPrice;
 	
+	@NotNull
 	@Column(name="address")
 	private String address;
 	
+	@NotNull
 	@Column(name="phone")
 	private String phone;
 	
+	@NotNull
 	@Column(name="status")
 	private String status;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="userid")
 	private UserEntity userId;

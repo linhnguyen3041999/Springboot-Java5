@@ -16,6 +16,14 @@
   <link rel="stylesheet" href="/assetsAd/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="/assetsAd/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@9.17.2/dist/sweetalert2.min.css">
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.7/dist/sweetalert2.all.min.js"></script>
+
+   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -27,9 +35,9 @@
     <div class="card-body">
       <p class="login-box-msg">Sign in to start your session</p>
 
-      <form action="/checklogin" method="post">
+      <form action="/checklogin" id="demoForm" method="post">
         <div class="input-group mb-3">
-          <input type="text" name="username" class="form-control" placeholder="Username">
+          <input type="text" name="username" class="form-control" placeholder="Username"  required="true"> 
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -37,7 +45,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" name="password" class="form-control" placeholder="Password">
+          <input type="password" name="password" class="form-control" placeholder="Password" required="true">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -72,10 +80,10 @@
       <!-- /.social-auth-links -->
 
       <p class="mb-1">
-        <a href="forgot-password.html">I forgot my password</a>
+        <a href="/forgot-pass">I forgot my password</a>
       </p>
       <p class="mb-0">
-        <a href="register.html" class="text-center">Register a new membership</a>
+        <a href="/signup" class="text-center">Register a new membership</a>
       </p>
     </div>
     <!-- /.card-body -->
@@ -85,6 +93,42 @@
 <!-- /.login-box -->
 
 <!-- jQuery -->
+<script type="text/javascript">
+var url = window.location.search;
+if( url == "?signup=success"){
+	Swal.fire({
+		  title: 'Đăng ký thành công!',
+		  width: 600,
+		  padding: '3em',
+		
+		})
+}
+		if( url == "?sendmail=success"){
+			Swal.fire({
+				  title: 'Mật khẩu mới của bạn đã được gửi!',
+				  width: 600,
+				  padding: '3em',
+				
+				})
+		}
+		if( url == "?sendmail=fail"){
+			Swal.fire({
+				  icon: 'warning',
+				  title: 'username không tồn tại!',
+				  width: 600,
+				  padding: '3em',
+				
+				})
+		}if( url == "?massage=fail"){
+			Swal.fire({
+				  icon: 'warning',
+				  title: 'username hoặc password không đúng!',
+				  width: 600,
+				  padding: '3em',
+				
+				})
+		}
+</script>
 <script src="/assetsAd/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="/assetsAd/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

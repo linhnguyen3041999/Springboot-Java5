@@ -1,6 +1,7 @@
 package com.PS11390_NguyenTungNhatLinh_ASM.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,6 +12,7 @@ import com.PS11390_NguyenTungNhatLinh_ASM.dto.UserDTO;
 import com.PS11390_NguyenTungNhatLinh_ASM.service.UserService;
 
 @RestController
+@CrossOrigin
 public class UserAPI {
 	
 	@Autowired
